@@ -7,7 +7,7 @@
 #define _LISTA_H
 #include <stdbool.h>
 
-typedef int lst_info;
+typedef int * lst_info;
 typedef struct lst_no * lst_ptr;
 struct lst_no {
     lst_ptr ant;

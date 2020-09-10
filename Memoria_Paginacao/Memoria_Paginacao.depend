@@ -12,3 +12,23 @@
 	<stdlib.h>
 	"lista.h"
 
+1599098962 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.c
+	"lista.h"
+	<stdio.h>
+	<stdlib.h>
+
+1599698105 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.h
+	<stdbool.h>
+
+1599098962 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\main.c
+	<stdio.h>
+	<stdlib.h>
+	"memoria.h"
+
+1599687965 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\memoria.h
+
+1599700847 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\memoria.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+
