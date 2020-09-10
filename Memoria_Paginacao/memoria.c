@@ -80,11 +80,11 @@ void gerenciamento_memoria()
                         }
                         paginas--;
                     }
-                    if (paginas > 0) {
+                    if (paginas == 0) {
                         break;
                     }
                 }
-                if (paginas > 0) {
+                if (paginas == 0) {
                     break;
                 }
             }
