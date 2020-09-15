@@ -95,8 +95,3 @@ void gerenciamento_memoria()
         }
     }
 }
-
-
-
-
-
