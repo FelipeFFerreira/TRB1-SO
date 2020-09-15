@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "lista.h"
 
 #define QTD_PROCESSOS 200
@@ -52,14 +53,12 @@ void iniciar_Processo(int i)
 	lst_init(processos[i].tabela_pag);
 }
 
-void gerenciamento_memoria()
+void gerenciamento_memoria() // ESCALONADOR
 {
-    while (1) {
+    while (1) { // FAZER UMA VERIFICAÇÃO PARA PARAR O WHILE, CASO O QTD_PROCESSOS JÁ TENHA SIDO ATINGIDO
         int k = 0, i, j, l;
         if (processos[k].tam <= bits_livres) {  // Pode ser que seja melhor trabalhar com frames_livres
-            double aux = (processos[k].tam / 4);
-            int paginas = aux; // go to
-            //int paginas = (aux % 1) == 0 ? aux : aux + 1; // go to
+            int paginas = ceil(processos[k].tam / 4);
             /* Mutex */
             bits_livres -= paginas * 4;
             /* Fim do mutex */
@@ -88,10 +87,51 @@ void gerenciamento_memoria()
                     break;
                 }
             }
-            k++;
+            processos[k].estado = EXECUTANDO;   // Muda o estado do processo após alocar tudo
+
+            k++;                               // Vai pro prox processo
         }
         else {
             //sleep(3000);
         }
     }
 }
+
+
+void monitor_memoria() {
+    while (1) {
+        int i;
+        for (i = 0; i < QTD_PROCESSOS; i++) {
+            if (processos[i].estado == EXECUTANDO) {
+                processos[i].temp--;
+                if (processos[i].temp == 0) {
+                    processos[i].estado = TERMINOU;
+                    desaloca(i);    // Verificar se vai precisar de mutex
+                    bits_livres += (ceil(processos[k].tam / 4)) * 4;
+                }
+            }
+            else if (processos[i].estado == PRONTO) {
+                break;
+            }
+        }
+        sleep(3000);
+    }
+}
+
+void desaloca(int indice_proc) {
+    lst_ptr aux = processos[indice_proc].tabela_pag
+    int i;
+    lst_ptr aux_2;
+    while (aux != NULL) {
+        for (i = 0; i < 4; i++) {
+            *(aux.dado) = NULL;
+            aux++;
+        }
+        aux_2 = aux;
+        aux = aux.prox;
+        free(aux_2);    // go to
+    }
+}
+
+
+
