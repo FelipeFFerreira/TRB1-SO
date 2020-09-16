@@ -1,16 +1,20 @@
 # depslib dependency file v1.0
-1599098775 source:c:\github\trb1-so\memoria_paginacao\lista.c
+1600290140 source:c:\github\trb1-so\memoria_paginacao\lista.c
 	"lista.h"
-	<stdio.h>
 	<stdlib.h>
+	<stdio.h>
 
-1599098782 c:\github\trb1-so\memoria_paginacao\lista.h
+1600290124 c:\github\trb1-so\memoria_paginacao\lista.h
 	<stdbool.h>
 
-1599098785 source:c:\github\trb1-so\memoria_paginacao\memoria.c
+1600299759 source:c:\github\trb1-so\memoria_paginacao\memoria.c
 	<stdio.h>
 	<stdlib.h>
+	<math.h>
 	"lista.h"
+	<pthread.h>
+	<unistd.h>
+	"memoria.h"
 
 1599098962 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.c
 	"lista.h"
@@ -31,4 +35,11 @@
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
+
+1599098325 source:c:\github\trb1-so\memoria_paginacao\main.c
+	<stdio.h>
+	<stdlib.h>
+	"memoria.h"
+
+1600287791 c:\github\trb1-so\memoria_paginacao\memoria.h
 

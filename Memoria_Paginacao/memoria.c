@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include "lista.h"
+#include <pthread.h>
+#include <unistd.h>
+#include "memoria.h"
+
 
 #define QTD_PROCESSOS 200
 #define QTD_LINHAS 32
@@ -22,43 +26,53 @@ typedef struct {
     lst_ptr tabela_pag;
 }Processo;
 
-int bits_livres;
+static int bits_livres = QTD_LINHAS * QTD_COLUNAS;
 
 int memoria[QTD_LINHAS][QTD_COLUNAS];
 
 static Processo processos[QTD_PROCESSOS];
 
-simulacao_memoria_paginada()
+void simulacao_memoria_paginada()
 {
 	int i, j;
+
 	for (i = 0; i < QTD_LINHAS; i++) {
         for (j = 0; j < QTD_COLUNAS; j++) {
             memoria[i][j] = NULL;
         }
     }
 
+    /*Cria fila de processos*/
 	for(i = 0; i < QTD_PROCESSOS; i++) {
 		iniciar_Processo(i);
 	}
+	/*Inicia gerencia de memeoria*/
     gerenciamento_memoria();
 
 }
 
 void iniciar_Processo(int i)
 {
-	processos[i].tam = rand();
-	processos[i].temp = rand();
+    int tam = rand() % 15;
+    int temp = rand() % 15;
+	processos[i].tam = tam;
+	processos[i].temp = temp;
 	processos[i].estado = PRONTO;
 
-	lst_init(processos[i].tabela_pag);
+	lst_init(&processos[i].tabela_pag); //Inicia lista de pagina
 }
 
 void gerenciamento_memoria() // ESCALONADOR
 {
+    int k = 0;
+    pthread_t thread_monitor;
+    int flag_monitor;
+    flag_monitor = pthread_create(&thread_monitor, NULL, monitor_memoria, NULL);
+    if(flag_monitor != false)printf("Erro na criacao da Thread Monitor\n");
     while (1) { // FAZER UMA VERIFICAÇÃO PARA PARAR O WHILE, CASO O QTD_PROCESSOS JÁ TENHA SIDO ATINGIDO
-        int k = 0, i, j, l;
+        int  i, j, l;
         if (processos[k].tam <= bits_livres) {  // Pode ser que seja melhor trabalhar com frames_livres
-            int paginas = ceil(processos[k].tam / 4);
+            int paginas = ceil(processos[k].tam / 4.0);
             /* Mutex */
             bits_livres -= paginas * 4;
             /* Fim do mutex */
@@ -67,7 +81,7 @@ void gerenciamento_memoria() // ESCALONADOR
             for (i = 0; i < QTD_LINHAS; i++) {
                 for (j = 0; j < QTD_COLUNAS; j += 4) {
                     if (memoria[i][j] == NULL) {
-                        lst_inserir(processos[k].tabela_pag, &memoria[i][j]);
+                        lst_ins(&processos[k].tabela_pag, &memoria[i][j]);
                         for (l = j; l < j + 4; l++) {
                             if (tamanho > 0) {
                                 memoria[i][l] = k;  /* Talvez precise de mutex */
@@ -107,7 +121,7 @@ void monitor_memoria() {
                 if (processos[i].temp == 0) {
                     processos[i].estado = TERMINOU;
                     desaloca(i);    // Verificar se vai precisar de mutex
-                    bits_livres += (ceil(processos[k].tam / 4)) * 4;
+                    bits_livres += (ceil(processos[i].tam / 4)) * 4;
                 }
             }
             else if (processos[i].estado == PRONTO) {
@@ -119,16 +133,16 @@ void monitor_memoria() {
 }
 
 void desaloca(int indice_proc) {
-    lst_ptr aux = processos[indice_proc].tabela_pag
+    lst_ptr aux = processos[indice_proc].tabela_pag;
     int i;
     lst_ptr aux_2;
     while (aux != NULL) {
         for (i = 0; i < 4; i++) {
-            *(aux.dado) = NULL;
-            aux++;
+            *(aux->dado) = NULL;
+             aux++;
         }
         aux_2 = aux;
-        aux = aux.prox;
+        aux = aux->prox;
         free(aux_2);    // go to
     }
 }
