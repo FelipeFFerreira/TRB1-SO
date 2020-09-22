@@ -7,6 +7,8 @@ void iniciar_Processo(int);
 
 void gerenciamento_memoria();
 
-void monitor_memoria();
+void * monitor_memoria();
+
+void desaloca(int);
 
 #endif

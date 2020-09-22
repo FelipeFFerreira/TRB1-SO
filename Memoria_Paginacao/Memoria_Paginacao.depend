@@ -7,7 +7,7 @@
 1600290124 c:\github\trb1-so\memoria_paginacao\lista.h
 	<stdbool.h>
 
-1600299759 source:c:\github\trb1-so\memoria_paginacao\memoria.c
+1600811135 source:c:\github\trb1-so\memoria_paginacao\memoria.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
@@ -41,5 +41,5 @@
 	<stdlib.h>
 	"memoria.h"
 
-1600287791 c:\github\trb1-so\memoria_paginacao\memoria.h
+1600810769 c:\github\trb1-so\memoria_paginacao\memoria.h
 

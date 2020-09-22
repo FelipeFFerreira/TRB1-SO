@@ -26,6 +26,8 @@ typedef struct {
     lst_ptr tabela_pag;
 }Processo;
 
+pthread_mutex_t mutex;
+
 static int bits_livres = QTD_LINHAS * QTD_COLUNAS;
 
 int memoria[QTD_LINHAS][QTD_COLUNAS];
@@ -62,6 +64,7 @@ void iniciar_Processo(int i)
 	lst_init(&processos[i].tabela_pag); //Inicia lista de pagina
 }
 
+
 void gerenciamento_memoria() // ESCALONADOR
 {
     int k = 0;
@@ -74,7 +77,9 @@ void gerenciamento_memoria() // ESCALONADOR
         if (processos[k].tam <= bits_livres) {  // Pode ser que seja melhor trabalhar com frames_livres
             int paginas = ceil(processos[k].tam / 4.0);
             /* Mutex */
+            pthread_mutex_lock(&(mutex));
             bits_livres -= paginas * 4;
+            pthread_mutex_unlock(&(mutex));
             /* Fim do mutex */
             int tamanho = processos[k].tam;
 
@@ -84,8 +89,10 @@ void gerenciamento_memoria() // ESCALONADOR
                         lst_ins(&processos[k].tabela_pag, &memoria[i][j]);
                         for (l = j; l < j + 4; l++) {
                             if (tamanho > 0) {
+                                pthread_mutex_lock(&(mutex));
                                 memoria[i][l] = k;  /* Talvez precise de mutex */
                                 tamanho--;
+                                pthread_mutex_unlock(&(mutex));
                             }
                             else {
                                 break;
@@ -112,7 +119,7 @@ void gerenciamento_memoria() // ESCALONADOR
 }
 
 
-void monitor_memoria() {
+void * monitor_memoria() {
     while (1) {
         int i;
         for (i = 0; i < QTD_PROCESSOS; i++) {
@@ -120,7 +127,9 @@ void monitor_memoria() {
                 processos[i].temp--;
                 if (processos[i].temp == 0) {
                     processos[i].estado = TERMINOU;
+                    pthread_mutex_lock(&(mutex));
                     desaloca(i);    // Verificar se vai precisar de mutex
+                    pthread_mutex_unlock(&(mutex));
                     bits_livres += (ceil(processos[i].tam / 4)) * 4;
                 }
             }
@@ -128,18 +137,20 @@ void monitor_memoria() {
                 break;
             }
         }
-        sleep(3000);
+        //sleep(3000);
     }
 }
 
 void desaloca(int indice_proc) {
+    printf("\nProcesso a ser desalocado %d\n", indice_proc);
     lst_ptr aux = processos[indice_proc].tabela_pag;
     int i;
     lst_ptr aux_2;
     while (aux != NULL) {
         for (i = 0; i < 4; i++) {
+            int conteudo = *(aux->dado);
             *(aux->dado) = NULL;
-             aux++;
+             aux->dado++;
         }
         aux_2 = aux;
         aux = aux->prox;
