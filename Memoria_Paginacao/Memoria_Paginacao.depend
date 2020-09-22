@@ -7,7 +7,7 @@
 1600290124 c:\github\trb1-so\memoria_paginacao\lista.h
 	<stdbool.h>
 
-1600811510 source:c:\github\trb1-so\memoria_paginacao\memoria.c
+1600815238 source:c:\github\trb1-so\memoria_paginacao\memoria.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
@@ -15,6 +15,7 @@
 	<pthread.h>
 	<unistd.h>
 	"memoria.h"
+	<windows.h>
 
 1599098962 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.c
 	"lista.h"
@@ -36,7 +37,7 @@
 	<stdlib.h>
 	"lista.h"
 
-1599098325 source:c:\github\trb1-so\memoria_paginacao\main.c
+1600812644 source:c:\github\trb1-so\memoria_paginacao\main.c
 	<stdio.h>
 	<stdlib.h>
 	"memoria.h"

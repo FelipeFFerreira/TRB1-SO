@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "memoria.h"
+#include <windows.h>
 
 
 #define QTD_PROCESSOS 200
@@ -55,8 +56,8 @@ void simulacao_memoria_paginada()
 
 void iniciar_Processo(int i)
 {
-    int tam = rand() % 15;
-    int temp = rand() % 15;
+    int tam = 10 + rand() % 20;
+    int temp = 100 + rand() % 200;
 	processos[i].tam = tam;
 	processos[i].temp = temp;
 	processos[i].estado = PRONTO;
@@ -113,7 +114,7 @@ void gerenciamento_memoria() // ESCALONADOR
             k++;                               // Vai pro prox processo
         }
         else {
-            //sleep(3000);
+            Sleep(400);
         }
     }
     pthread_join(thread_monitor,NULL); //para
@@ -121,24 +122,27 @@ void gerenciamento_memoria() // ESCALONADOR
 
 
 void * monitor_memoria() {
-    while (1) {
+    int count = 0;
+    while (count < QTD_PROCESSOS) {
         int i;
         for (i = 0; i < QTD_PROCESSOS; i++) {
             if (processos[i].estado == EXECUTANDO) {
                 processos[i].temp--;
+                int tempo_proc_atual = processos[i].temp;
                 if (processos[i].temp == 0) {
                     processos[i].estado = TERMINOU;
+                    count++;
                     pthread_mutex_lock(&(mutex));
                     desaloca(i);    // Verificar se vai precisar de mutex
+                    bits_livres += (ceil(processos[i].tam / 4.0)) * 4;//go do
                     pthread_mutex_unlock(&(mutex));
-                    bits_livres += (ceil(processos[i].tam / 4)) * 4;
                 }
             }
             else if (processos[i].estado == PRONTO) {
                 break;
             }
         }
-        //sleep(3000);
+        Sleep(100);
     }
 }
 
