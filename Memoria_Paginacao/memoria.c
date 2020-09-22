@@ -72,7 +72,7 @@ void gerenciamento_memoria() // ESCALONADOR
     int flag_monitor;
     flag_monitor = pthread_create(&thread_monitor, NULL, monitor_memoria, NULL);
     if(flag_monitor != false)printf("Erro na criacao da Thread Monitor\n");
-    while (1) { // FAZER UMA VERIFICA플O PARA PARAR O WHILE, CASO O QTD_PROCESSOS J� TENHA SIDO ATINGIDO
+    while (k < QTD_PROCESSOS) { // FAZER UMA VERIFICA플O PARA PARAR O WHILE, CASO O QTD_PROCESSOS J� TENHA SIDO ATINGIDO
         int  i, j, l;
         if (processos[k].tam <= bits_livres) {  // Pode ser que seja melhor trabalhar com frames_livres
             int paginas = ceil(processos[k].tam / 4.0);
@@ -116,6 +116,7 @@ void gerenciamento_memoria() // ESCALONADOR
             //sleep(3000);
         }
     }
+    pthread_join(thread_monitor,NULL); //para
 }
 
 
@@ -142,7 +143,7 @@ void * monitor_memoria() {
 }
 
 void desaloca(int indice_proc) {
-    printf("\nProcesso a ser desalocado %d\n", indice_proc);
+    printf("\n%d", indice_proc);
     lst_ptr aux = processos[indice_proc].tabela_pag;
     int i;
     lst_ptr aux_2;
