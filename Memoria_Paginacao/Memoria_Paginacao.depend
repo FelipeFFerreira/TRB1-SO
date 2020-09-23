@@ -44,3 +44,28 @@
 
 1600811510 c:\github\trb1-so\memoria_paginacao\memoria.h
 
+1600888021 source:c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\lista.c
+	"lista.h"
+	<stdlib.h>
+	<stdio.h>
+
+1600888021 c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\lista.h
+	<stdbool.h>
+
+1600888021 source:c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\main.c
+	<stdio.h>
+	<stdlib.h>
+	"memoria.h"
+
+1600888021 c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\memoria.h
+
+1600888021 source:c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\memoria.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"lista.h"
+	<pthread.h>
+	<unistd.h>
+	"memoria.h"
+	<windows.h>
+

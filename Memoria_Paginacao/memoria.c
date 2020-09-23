@@ -13,7 +13,7 @@
 #define QTD_COLUNAS 32
 
 /*Defini maquina de estados de um Processo*/
-typedef enum  {
+typedef enum {
 	PRONTO =1 ,
 	EXECUTANDO,
 	TERMINOU,
@@ -37,19 +37,22 @@ static Processo processos[QTD_PROCESSOS];
 
 void simulacao_memoria_paginada()
 {
-	int i, j;
+	int i; //tirei o j
 
+	/*
 	for (i = 0; i < QTD_LINHAS; i++) {
         for (j = 0; j < QTD_COLUNAS; j++) {
             memoria[i][j] = NULL;
         }
     }
+    */
 
-    /*Cria fila de processos*/
+    /* Cria fila de processos */
 	for(i = 0; i < QTD_PROCESSOS; i++) {
 		iniciar_Processo(i);
 	}
-	/*Inicia gerencia de memeoria*/
+
+	/* Inicia gerencia de memeoria */
     gerenciamento_memoria();
 
 }
@@ -65,7 +68,7 @@ void iniciar_Processo(int i)
 	lst_init(&processos[i].tabela_pag); //Inicia lista de pagina
 }
 
-
+/* Função que aloca o processo na memória */
 void gerenciamento_memoria() // ESCALONADOR
 {
     int k = 0;
@@ -86,7 +89,7 @@ void gerenciamento_memoria() // ESCALONADOR
 
             for (i = 0; i < QTD_LINHAS; i++) {
                 for (j = 0; j < QTD_COLUNAS; j += 4) {
-                    if (memoria[i][j] == NULL) {
+                    if (!memoria[i][j]) { //estava memoria[i][j] == NULL
                         lst_ins(&processos[k].tabela_pag, &memoria[i][j]);
                         for (l = j; l < j + 4; l++) {
                             if (tamanho > 0) {
@@ -102,12 +105,14 @@ void gerenciamento_memoria() // ESCALONADOR
                         paginas--;
                     }
                     if (paginas == 0) {
+                        i = QTD_LINHAS;
                         break;
                     }
                 }
+                /*
                 if (paginas == 0) {
                     break;
-                }
+                }*/
             }
             processos[k].estado = EXECUTANDO;   // Muda o estado do processo após alocar tudo
 
@@ -120,7 +125,7 @@ void gerenciamento_memoria() // ESCALONADOR
     pthread_join(thread_monitor,NULL); //para
 }
 
-
+/* Função que executa o proecsso na memória */
 void * monitor_memoria() {
     int count = 0;
     while (count < QTD_PROCESSOS) {
@@ -139,15 +144,17 @@ void * monitor_memoria() {
                 }
             }
             else if (processos[i].estado == PRONTO) {
+                print();
                 break;
             }
         }
         Sleep(100);
+        print();
     }
 }
 
 void desaloca(int indice_proc) {
-    printf("\n%d", indice_proc);
+    //printf("\n%d", indice_proc);
     lst_ptr aux = processos[indice_proc].tabela_pag;
     int i;
     lst_ptr aux_2;
@@ -161,6 +168,19 @@ void desaloca(int indice_proc) {
         aux = aux->prox;
         free(aux_2);    // go to
     }
+}
+
+void print() {
+    int i, j;
+    printf("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    for (i = 0; i < QTD_LINHAS; i++) {
+        for (j = 0; j < QTD_COLUNAS; j++) {
+           printf("[%3d] ", memoria[i][j]);
+        }
+        printf("\n");
+    }
+    printf("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    //system("pause");
 }
 
 

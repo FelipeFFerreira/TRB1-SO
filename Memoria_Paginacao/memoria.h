@@ -11,4 +11,6 @@ void * monitor_memoria();
 
 void desaloca(int);
 
+void print();
+
 #endif
