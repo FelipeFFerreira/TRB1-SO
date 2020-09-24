@@ -156,7 +156,7 @@ void * monitor_memoria() {
                 break;
             }
         }
-        Sleep(300);
+        Sleep(5);
         print();
     }
 }
