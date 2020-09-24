@@ -57,9 +57,9 @@
 	<stdlib.h>
 	"memoria.h"
 
-1600888021 c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\memoria.h
+1600904645 c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\memoria.h
 
-1600888021 source:c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\memoria.c
+1600906903 source:c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\memoria.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
@@ -68,4 +68,16 @@
 	<unistd.h>
 	"memoria.h"
 	<windows.h>
+
+1124063518 source:c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\conio.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<windows.h>
+	<string.h>
+	<stdarg.h>
+	"conio.h"
+
+1124055772 c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\conio.h
+	<stdio.h>
 

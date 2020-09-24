@@ -50,7 +50,11 @@ void simulacao_memoria_paginada()
     /* Cria fila de processos */
 	for(i = 0; i < QTD_PROCESSOS; i++) {
 		iniciar_Processo(i);
+        //textbackground(8);
+		printf("processo %d, tamanho:%d, tempo:%d\n", i + 1, processos[i].tam, processos[i].temp);
+        //textbackground(0);
 	}
+	textbackground(0);
 
 	/* Inicia gerencia de memeoria */
     gerenciamento_memoria();
@@ -66,6 +70,10 @@ void iniciar_Processo(int i)
 	processos[i].estado = PRONTO;
 
 	lst_init(&processos[i].tabela_pag); //Inicia lista de pagina
+}
+
+void print_info() {
+
 }
 
 /* Função que aloca o processo na memória */
@@ -94,7 +102,7 @@ void gerenciamento_memoria() // ESCALONADOR
                         for (l = j; l < j + 4; l++) {
                             if (tamanho > 0) {
                                 pthread_mutex_lock(&(mutex));
-                                memoria[i][l] = k;  /* Talvez precise de mutex */
+                                memoria[i][l] = k+1;  /* Talvez precise de mutex */
                                 tamanho--;
                                 pthread_mutex_unlock(&(mutex));
                             }
@@ -144,11 +152,11 @@ void * monitor_memoria() {
                 }
             }
             else if (processos[i].estado == PRONTO) {
-                print();
+                //print();
                 break;
             }
         }
-        Sleep(100);
+        Sleep(300);
         print();
     }
 }
@@ -175,12 +183,28 @@ void print() {
     printf("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     for (i = 0; i < QTD_LINHAS; i++) {
         for (j = 0; j < QTD_COLUNAS; j++) {
-           printf("[%3d] ", memoria[i][j]);
+           if (!memoria[i][j]) {
+                //if (j != QTD_COLUNAS && j % 4 == 0) {
+                    //textbackground(2);
+                   // printf("[ @ ]");
+                   // textbackground(0);
+                //} else {
+                    textbackground(4);
+                    printf("[ @ ]");
+                    textbackground(0);
+
+           } else {
+               printf("[%3d]", memoria[i][j]);
+           }
+           textbackground(0);
+           printf(" ");
         }
+        textbackground(0);
         printf("\n");
     }
     printf("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     //system("pause");
+    //system("cls");
 }
 
 
