@@ -179,20 +179,24 @@ void desaloca(int indice_proc) {
 }
 
 void print() {
-    int i, j;
+    int i, j, count = 0;
     printf("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     for (i = 0; i < QTD_LINHAS; i++) {
         for (j = 0; j < QTD_COLUNAS; j++) {
            if (!memoria[i][j]) {
-                //if (j != QTD_COLUNAS && j % 4 == 0) {
-                    //textbackground(2);
-                   // printf("[ @ ]");
-                   // textbackground(0);
-                //} else {
+                if ((j != QTD_COLUNAS && (j % 4 == 0 || j == 0)) || count > 0) {
+                    if (count == 0) {
+                        count  = 4;
+                    }
+                    count--;
+                   textbackground(2);
+                   printf("[ @ ]");
+                   textbackground(0);
+                } else {
                     textbackground(4);
                     printf("[ @ ]");
                     textbackground(0);
-
+                }
            } else {
                printf("[%3d]", memoria[i][j]);
            }
