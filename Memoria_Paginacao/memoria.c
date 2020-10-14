@@ -189,9 +189,9 @@ void print() {
                         count  = 4;
                     }
                     count--;
-                   textbackground(2);
-                   printf("[ @ ]");
-                   textbackground(0);
+                    textbackground(2);
+                    printf("[ @ ]");
+                    textbackground(0);
                 } else {
                     textbackground(4);
                     printf("[ @ ]");
