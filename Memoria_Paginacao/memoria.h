@@ -12,6 +12,7 @@ void * monitor_memoria();
 void desaloca(int);
 
 void print();
+void * print_thread();
 void print_info();
 
 #endif

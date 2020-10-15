@@ -17,25 +17,32 @@
 	"memoria.h"
 	<windows.h>
 
-1599098962 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.c
+1602716247 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.c
 	"lista.h"
-	<stdio.h>
 	<stdlib.h>
+	<stdio.h>
 
-1599698105 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.h
+1602716247 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\lista.h
 	<stdbool.h>
 
-1599098962 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\main.c
+1602723407 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\main.c
 	<stdio.h>
 	<stdlib.h>
 	"memoria.h"
 
-1599687965 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\memoria.h
+1602720280 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\memoria.h
 
-1599700847 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\memoria.c
+1602722361 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\memoria.c
 	<stdio.h>
 	<stdlib.h>
+	<math.h>
 	"lista.h"
+	<pthread.h>
+	<unistd.h>
+	"memoria.h"
+	<windows.h>
+	"conio.h"
+	<time.h>
 
 1600812644 source:c:\github\trb1-so\memoria_paginacao\main.c
 	<stdio.h>
@@ -79,5 +86,17 @@
 	"conio.h"
 
 1124055772 c:\users\francisco\desktop\gabriel\cursos\trb1-so\memoria_paginacao\conio.h
+	<stdio.h>
+
+1602716247 source:c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\conio.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<windows.h>
+	<string.h>
+	<stdarg.h>
+	"conio.h"
+
+1602716247 c:\users\jaime\desktop\sistema operacional ii\trabalho i so\trb1-so-master\memoria_paginacao\conio.h
 	<stdio.h>
 

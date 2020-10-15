@@ -5,10 +5,10 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "memoria.h"
-#include <windows.h>
+#include "conio.h"
+#include <time.h>
 
-
-#define QTD_PROCESSOS 200
+#define QTD_PROCESSOS 100
 #define QTD_LINHAS 32
 #define QTD_COLUNAS 32
 
@@ -35,17 +35,16 @@ int memoria[QTD_LINHAS][QTD_COLUNAS];
 
 static Processo processos[QTD_PROCESSOS];
 
+int fragmentacao_interna;
+
+int grau_multiprogramacao;
+
+int terminar_print;
+
 void simulacao_memoria_paginada()
 {
-	int i; //tirei o j
-
-	/*
-	for (i = 0; i < QTD_LINHAS; i++) {
-        for (j = 0; j < QTD_COLUNAS; j++) {
-            memoria[i][j] = NULL;
-        }
-    }
-    */
+	int i;
+    srand((unsigned long long)time(NULL));
 
     /* Cria fila de processos */
 	for(i = 0; i < QTD_PROCESSOS; i++) {
@@ -56,9 +55,9 @@ void simulacao_memoria_paginada()
 	}
 	textbackground(0);
 
-	/* Inicia gerencia de memeoria */
+	/* Inicia gerenciamento de memoria */
     gerenciamento_memoria();
-
+    print_info();
 }
 
 void iniciar_Processo(int i)
@@ -73,21 +72,28 @@ void iniciar_Processo(int i)
 }
 
 void print_info() {
-
+    printf("\n\nFragmentacao Interna: %d k\n", fragmentacao_interna);
+    printf("\n\nGrau Multiprogramacao Maximo: %d processos\n", grau_multiprogramacao);
 }
 
 /* Função que aloca o processo na memória */
 void gerenciamento_memoria() // ESCALONADOR
 {
     int k = 0;
-    pthread_t thread_monitor;
-    int flag_monitor;
+    pthread_t thread_monitor, thread_print;
+    int flag_monitor, flag_print;
+
     flag_monitor = pthread_create(&thread_monitor, NULL, monitor_memoria, NULL);
-    if(flag_monitor != false)printf("Erro na criacao da Thread Monitor\n");
-    while (k < QTD_PROCESSOS) { // FAZER UMA VERIFICAÇÃO PARA PARAR O WHILE, CASO O QTD_PROCESSOS JÁ TENHA SIDO ATINGIDO
-        int  i, j, l;
-        if (processos[k].tam <= bits_livres) {  // Pode ser que seja melhor trabalhar com frames_livres
+    if (flag_monitor != false) printf("Erro na criacao da Thread Monitor\n");
+
+    flag_print = pthread_create(&thread_print, NULL, print_thread, NULL);
+    if (flag_print != false) printf("Erro na criacao da Thread Print\n");
+
+    while (k < QTD_PROCESSOS) {
+        int i, j, l;
+        if (processos[k].tam <= bits_livres) {
             int paginas = ceil(processos[k].tam / 4.0);
+            fragmentacao_interna += (paginas * 4) - processos[k].tam;
             /* Mutex */
             pthread_mutex_lock(&(mutex));
             bits_livres -= paginas * 4;
@@ -97,12 +103,12 @@ void gerenciamento_memoria() // ESCALONADOR
 
             for (i = 0; i < QTD_LINHAS; i++) {
                 for (j = 0; j < QTD_COLUNAS; j += 4) {
-                    if (!memoria[i][j]) { //estava memoria[i][j] == NULL
+                    if (!memoria[i][j]) {
                         lst_ins(&processos[k].tabela_pag, &memoria[i][j]);
                         for (l = j; l < j + 4; l++) {
                             if (tamanho > 0) {
                                 pthread_mutex_lock(&(mutex));
-                                memoria[i][l] = k+1;  /* Talvez precise de mutex */
+                                memoria[i][l] = k+1;
                                 tamanho--;
                                 pthread_mutex_unlock(&(mutex));
                             }
@@ -117,68 +123,81 @@ void gerenciamento_memoria() // ESCALONADOR
                         break;
                     }
                 }
-                /*
-                if (paginas == 0) {
-                    break;
-                }*/
             }
-            processos[k].estado = EXECUTANDO;   // Muda o estado do processo após alocar tudo
+            processos[k].estado = EXECUTANDO;
 
-            k++;                               // Vai pro prox processo
+            k++;
         }
         else {
-            Sleep(400);
+            sleep(400);
         }
     }
-    pthread_join(thread_monitor,NULL); //para
+    pthread_join(thread_monitor,NULL);
+    pthread_join(thread_print,NULL);
 }
 
-/* Função que executa o proecsso na memória */
-void * monitor_memoria() {
-    int count = 0;
+/* Função que executa o processo na memória */
+void * monitor_memoria()
+{
+    int i, grau, count = 0;
     while (count < QTD_PROCESSOS) {
-        int i;
+        grau = 0;
         for (i = 0; i < QTD_PROCESSOS; i++) {
             if (processos[i].estado == EXECUTANDO) {
                 processos[i].temp--;
-                int tempo_proc_atual = processos[i].temp;
+                grau++;
                 if (processos[i].temp == 0) {
                     processos[i].estado = TERMINOU;
                     count++;
+                    /* Mutex */
                     pthread_mutex_lock(&(mutex));
                     desaloca(i);    // Verificar se vai precisar de mutex
                     bits_livres += (ceil(processos[i].tam / 4.0)) * 4;//go do
                     pthread_mutex_unlock(&(mutex));
+                    /* Fim do Mutex */
                 }
             }
             else if (processos[i].estado == PRONTO) {
-                //print();
                 break;
             }
         }
-        Sleep(5);
-        print();
+        if (grau > grau_multiprogramacao) {
+            grau_multiprogramacao = grau;
+        }
+        sleep(200);
     }
+    terminar_print = 1; // Váriavel para controlar a parada da thread_print
 }
 
-void desaloca(int indice_proc) {
-    //printf("\n%d", indice_proc);
+void desaloca(int indice_proc)
+{
     lst_ptr aux = processos[indice_proc].tabela_pag;
     int i;
     lst_ptr aux_2;
     while (aux != NULL) {
         for (i = 0; i < 4; i++) {
-            int conteudo = *(aux->dado);
             *(aux->dado) = NULL;
              aux->dado++;
         }
         aux_2 = aux;
         aux = aux->prox;
-        free(aux_2);    // go to
+        free(aux_2);
     }
 }
 
-void print() {
+/* Thread para prints da memória */
+void * print_thread()
+{
+    while (terminar_print != 1) {
+        print();
+        sleep(3000);
+    }
+    print();
+}
+
+/* Printa a matriz da memória */
+void print()
+{
     int i, j, count = 0;
     printf("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     for (i = 0; i < QTD_LINHAS; i++) {
@@ -210,6 +229,3 @@ void print() {
     //system("pause");
     //system("cls");
 }
-
-
-
